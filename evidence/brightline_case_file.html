@@ -1,0 +1,328 @@
+<title>Brightline Case File</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: audit workpaper. Left exhibit index (sticky on wide screens), one reading column, wide tables scroll inside their own frames. */
+:root {
+  --paper: #f7f8fa;
+  --sheet: #ffffff;
+  --ink: #1b2330;
+  --muted: #5a6474;
+  --rule: #d9dee6;
+  --accent: #2f4a73;
+  --stamp: #9b2d2d;
+  --stamp-bg: #f6e7e5;
+  --warn: #8a5a00;
+  --warn-bg: #fbf0d9;
+  --ok: #2c6a45;
+  --ok-bg: #e3f1e8;
+  --code-bg: #eef1f5;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161d; --sheet: #191e27; --ink: #e3e7ee; --muted: #9aa4b4; --rule: #2c3440;
+    --accent: #8fb0e0; --stamp: #f0948a; --stamp-bg: #3a1f1e; --warn: #e8c068; --warn-bg: #332a14;
+    --ok: #86cfa2; --ok-bg: #18301f; --code-bg: #10141a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12161d; --sheet: #191e27; --ink: #e3e7ee; --muted: #9aa4b4; --rule: #2c3440;
+  --accent: #8fb0e0; --stamp: #f0948a; --stamp-bg: #3a1f1e; --warn: #e8c068; --warn-bg: #332a14;
+  --ok: #86cfa2; --ok-bg: #18301f; --code-bg: #10141a; color-scheme: dark;
+}
+body {
+  background: var(--paper); color: var(--ink);
+  font: 15px/1.6 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+
+nav.index { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 13px; }
+nav.index h2 { font: 600 11px/1 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+nav.index ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+nav.index a { color: var(--ink); text-decoration: none; display: grid; grid-template-columns: 28px 1fr; }
+nav.index a span { font-family: var(--f-mono); color: var(--accent); }
+nav.index a:hover, nav.index a:focus-visible { color: var(--accent); }
+@media (max-width: 860px) {
+  nav.index { position: static; }
+  nav.index ol { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
+
+main { min-width: 0; display: grid; gap: 48px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.banner {
+  border: 1.5px solid var(--stamp); background: var(--stamp-bg); color: var(--stamp);
+  padding: 10px 14px; font: 600 13px/1.45 var(--f-body); letter-spacing: .02em; border-radius: 3px;
+}
+.banner b { letter-spacing: .12em; text-transform: uppercase; margin-right: 6px; }
+
+header.cover { display: grid; gap: 18px; }
+.eyebrow { font: 600 11px/1 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font: 650 clamp(30px, 4.4vw, 44px)/1.1 var(--f-display); margin: 0; text-wrap: balance; }
+h2 { font: 650 26px/1.2 var(--f-display); margin: 0; text-wrap: balance; }
+h3 { font: 600 16px/1.3 var(--f-body); margin: 0; }
+p { margin: 0; max-width: 68ch; }
+.lede { font-size: 17px; color: var(--muted); }
+
+dl.meta { display: grid; grid-template-columns: max-content 1fr; gap: 6px 20px; margin: 0; font-size: 14px; }
+dl.meta dt { color: var(--muted); }
+dl.meta dd { margin: 0; }
+
+.tally { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.tally div { background: var(--sheet); padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.tally strong { font: 650 28px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.tally span { font-size: 13px; color: var(--muted); }
+
+section.exhibit { display: grid; gap: 18px; scroll-margin-top: 24px; }
+.ex-head { display: grid; gap: 6px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.ex-head .tag { font: 500 12px/1 var(--f-mono); color: var(--accent); letter-spacing: .05em; }
+.source { font-size: 13px; color: var(--muted); font-style: italic; }
+.endmark { font: 500 11px/1 var(--f-mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+
+.tbl { overflow-x: auto; border: 1px solid var(--rule); background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+th { font: 600 11px/1.3 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--paper); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.mono, .mono { font-family: var(--f-mono); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wide table { min-width: 980px; }
+
+.chip { display: inline-block; font: 600 11px/1 var(--f-body); letter-spacing: .03em; padding: 4px 7px; border-radius: 3px; white-space: nowrap; }
+.chip.bad { color: var(--stamp); background: var(--stamp-bg); }
+.chip.warn { color: var(--warn); background: var(--warn-bg); }
+.chip.ok { color: var(--ok); background: var(--ok-bg); }
+.chip.neutral { color: var(--muted); background: var(--code-bg); }
+
+.principle-commit { color: var(--muted); }
+blockquote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--rule); font: 500 17px/1.5 var(--f-display); max-width: 64ch; }
+
+.email { background: var(--sheet); border: 1px solid var(--rule); }
+.email .hdr { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; padding: 14px 16px; border-bottom: 1px solid var(--rule); font: 13px/1.5 var(--f-mono); }
+.email .hdr dt { color: var(--muted); }
+.email .hdr dd { margin: 0; overflow-wrap: anywhere; }
+.email .body { padding: 16px; display: grid; gap: 12px; max-width: 72ch; }
+.email .body ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.email .sig { font: 13px/1.5 var(--f-mono); color: var(--muted); }
+
+.notes { display: grid; gap: 8px; padding: 14px 16px; background: var(--code-bg); border-left: 3px solid var(--accent); }
+.notes h3 { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.notes ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; max-width: 72ch; }
+
+.stats { margin: 0; padding-left: 18px; display: grid; gap: 6px; max-width: 72ch; }
+
+footer { border-top: 1px solid var(--rule); padding-top: 16px; }
+</style>
+
+<div class="wrap">
+  <nav class="index" aria-label="Exhibits">
+    <h2>Case file</h2>
+    <ol>
+      <li><a href="#cover"><span>—</span>Cover</a></li>
+      <li><a href="#exA"><span>A</span>Charter excerpts</a></li>
+      <li><a href="#exB"><span>B</span>Review board records</a></li>
+      <li><a href="#exC"><span>C</span>Sales email</a></li>
+      <li><a href="#exD"><span>D</span>Ticket log</a></li>
+      <li><a href="#index"><span>R</span>Reviewer's index</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="cover" id="cover">
+      <div class="banner" role="note"><b>Simulated</b>Fictional evidence for a governance case exercise. Brightline Talent Systems, its people, customers, documents, emails and tickets are invented. Nothing here is a real record.</div>
+      <p class="eyebrow">Independent review · Audit Committee</p>
+      <h1>Brightline Talent Systems: Responsible AI Charter review</h1>
+      <p class="lede">A whistleblower alleges the company's seven-principle Responsible AI Charter is decorative. This file collects the charter text, the review board's meeting records, one sales email and an internal ticket log, then maps each allegation to the evidence.</p>
+      <dl class="meta">
+        <dt>Prepared for</dt><dd>Audit Committee, Brightline Talent Systems (fictional)</dd>
+        <dt>Prepared by</dt><dd>Independent Reviewer</dd>
+        <dt>Review period</dt><dd>1 Oct 2024 – 30 Sep 2026 (8 fiscal quarters)</dd>
+        <dt>File date</dt><dd>18 Oct 2026</dd>
+      </dl>
+      <div class="tally" aria-label="Key figures">
+        <div><strong>2 of 8</strong><span>required board meetings held</span></div>
+        <div><strong>0 of 3</strong><span>retrains with an updated model card</span></div>
+        <div><strong>~140</strong><span>sales emails promising "bias-free screening"</span></div>
+        <div><strong>8 of 9</strong><span>fairness concerns reclassified without RAI Office approval</span></div>
+      </div>
+    </header>
+
+    <!-- EXHIBIT A -->
+    <section class="exhibit" id="exA">
+      <div class="ex-head">
+        <span class="tag">EXHIBIT A · SIMULATED</span>
+        <h2>Responsible AI Charter (excerpts)</h2>
+        <p class="source">Source: "Brightline Responsible AI Charter, v1.0," adopted by the Board 12 Sep 2024, published at brightline.example/responsible-ai. Executive sponsor: Chief Product Officer.</p>
+      </div>
+      <blockquote>"At Brightline, we believe hiring technology should open doors, not close them. These seven principles guide every model we build and every product we sell."</blockquote>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>#</th><th>Principle</th><th>Charter text</th><th>Operational commitment</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">1</td><td><b>Fairness</b></td><td>"We test every model for adverse impact before it reaches a single candidate."</td><td class="principle-commit">Before each production release, adverse impact ratio (AIR) of at least <b>0.80</b> (four-fifths rule) across sex, race/ethnicity and age 40+. A failing release is <b>blocked</b> until the Fairness Review Board signs off.</td></tr>
+            <tr><td class="mono">2</td><td><b>Transparency</b></td><td>"Customers and candidates deserve to know how our models work."</td><td class="principle-commit">A public <b>model card</b> is updated with every material model change, <b>including retraining</b>, within 30 days of release.</td></tr>
+            <tr><td class="mono">3</td><td><b>Accountability</b></td><td>"Responsibility for AI outcomes sits with named leaders, not with algorithms."</td><td class="principle-commit">The <b>Fairness Review Board</b> (7 members, quorum 5) meets <b>at least quarterly</b> and reports to the Audit Committee twice a year.</td></tr>
+            <tr><td class="mono">4</td><td><b>Human Oversight</b></td><td>"Our models recommend; people decide."</td><td class="principle-commit">Customers are told the score is advisory. No auto-rejection without customer opt-in.</td></tr>
+            <tr><td class="mono">5</td><td><b>Privacy</b></td><td>"Candidate data is used only to serve the hiring decision it was provided for."</td><td class="principle-commit">Data minimization and a 24-month retention limit.</td></tr>
+            <tr><td class="mono">6</td><td><b>Robustness</b></td><td>"We monitor our models in the real world, not only in the lab."</td><td class="principle-commit">Quarterly drift and disparity monitoring on live customer data.</td></tr>
+            <tr><td class="mono">7</td><td><b>Listening &amp; Continuous Improvement</b></td><td>"Every concern raised is a gift."</td><td class="principle-commit">Any report tagged <i>Fairness</i> is triaged by the RAI Office within 10 business days. A Fairness item may be reclassified <b>only with RAI Office approval</b>, with the reason recorded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>§8, External Communications:</b> "Public and customer-facing claims about the fairness of Brightline products must be reviewed by the RAI Office and Legal before use. Brightline does not claim its products eliminate bias; we claim we measure and mitigate it."</p>
+      <p class="endmark">End of Exhibit A · Simulated</p>
+    </section>
+
+    <!-- EXHIBIT B -->
+    <section class="exhibit" id="exB">
+      <div class="ex-head">
+        <span class="tag">EXHIBIT B · SIMULATED</span>
+        <h2>Fairness Review Board records</h2>
+        <p class="source">Source: FRB calendar export, minutes repository (SharePoint "RAI-Governance"), and ML release registry.</p>
+      </div>
+      <h3>B-1. Meeting cadence against the quarterly requirement</h3>
+      <div class="tbl wide">
+        <table>
+          <thead><tr><th>Quarter</th><th>Scheduled</th><th>Outcome</th><th>Attendance</th><th>Quorum</th><th>Recorded reason / notes</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">Q4 2024</td><td class="mono">14 Nov 2024</td><td><span class="chip ok">Held</span></td><td class="mono">6 / 7</td><td>Yes</td><td>Inaugural meeting. Adopted the 0.80 AIR release gate. Action: FRB to review v3.1 before release (owner: VP Product).</td></tr>
+            <tr><td class="mono">Q1 2025</td><td class="mono">20 Feb 2025</td><td><span class="chip bad">Cancelled</span></td><td>—</td><td>—</td><td>"Conflicts with v3.1 launch week." Not rescheduled. v3.1 had already shipped 27 Jan 2025 with no FRB review.</td></tr>
+            <tr><td class="mono">Q2 2025</td><td class="mono">15 May 2025</td><td><span class="chip bad">Cancelled</span></td><td>—</td><td>—</td><td>"Chair on leave." Chair role vacant 15 May – 1 Sep 2025.</td></tr>
+            <tr><td class="mono">Q3 2025</td><td class="mono">2 Oct 2025</td><td><span class="chip warn">Held, no quorum</span></td><td class="mono">4 / 7</td><td><b>No</b></td><td>Slipped from August. Discussed ENG-2215 (v3.2 AIR for age 55+ = 0.76). Minutes: "Members expressed concern. No vote possible without quorum. Product to provide mitigation plan." No plan on file. v3.2 shipped 4 days later.</td></tr>
+            <tr><td class="mono">Q4 2025</td><td class="mono">11 Dec 2025</td><td><span class="chip bad">Cancelled</span></td><td>—</td><td>—</td><td>"Year-end priorities."</td></tr>
+            <tr><td class="mono">Q1 2026</td><td>—</td><td><span class="chip bad">Not scheduled</span></td><td>—</td><td>—</td><td>No calendar entry found.</td></tr>
+            <tr><td class="mono">Q2 2026</td><td class="mono">18 Jun 2026</td><td><span class="chip bad">Cancelled</span></td><td>—</td><td>—</td><td>"Agenda items deferred to Q3."</td></tr>
+            <tr><td class="mono">Q3 2026</td><td class="mono">24 Sep 2026</td><td><span class="chip bad">Cancelled</span></td><td>—</td><td>—</td><td>Invite withdrawn by organizer on 22 Sep 2026; no reason recorded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>Summary:</b> 8 meetings required, 2 held, 1 with quorum. None of the 4 required semi-annual reports to the Audit Committee were delivered across FY2025–FY2026 (per Audit Committee minutes).</p>
+
+      <h3>B-2. Model releases vs. model card updates</h3>
+      <div class="tbl wide">
+        <table>
+          <thead><tr><th>Version</th><th>Released</th><th>Retrain</th><th>Pre-release fairness eval</th><th>FRB sign-off</th><th>Model card</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">v3.0</td><td class="mono">18 Mar 2024</td><td>Baseline (pre-charter)</td><td>Third-party audit, Feb 2024</td><td>n/a (FRB did not exist)</td><td class="mono">v1.2 · 18 Mar 2024</td></tr>
+            <tr><td class="mono">v3.1</td><td class="mono">27 Jan 2025</td><td>New training data (2024 hires)</td><td><span class="chip ok">Passed</span> internal, report on file</td><td><span class="chip bad">None</span></td><td class="mono">v1.2 · unchanged</td></tr>
+            <tr><td class="mono">v3.2</td><td class="mono">6 Oct 2025</td><td>New data, new "communication" feature</td><td><span class="chip bad">Failed</span> age 55+ AIR 0.76 (ENG-2215)</td><td><span class="chip bad">None</span> no quorum</td><td class="mono">v1.2 · unchanged</td></tr>
+            <tr><td class="mono">v3.3</td><td class="mono">12 May 2026</td><td>New data, re-weighted education features</td><td><span class="chip bad">Not run</span> pipeline broken (ENG-2388)</td><td><span class="chip bad">None</span></td><td class="mono">v1.2 · unchanged</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>Summary:</b> 3 retrains under the charter and no model card updates. The public card still describes v3.0's features and its February 2024 audit results, and does not mention the "communication" sub-score added in v3.2.</p>
+      <p class="endmark">End of Exhibit B · Simulated</p>
+    </section>
+
+    <!-- EXHIBIT C -->
+    <section class="exhibit" id="exC">
+      <div class="ex-head">
+        <span class="tag">EXHIBIT C · SIMULATED</span>
+        <h2>Sales email to a prospect</h2>
+        <p class="source">Source: CRM email capture, Opportunity #OPP-88213. Produced by Sales Ops under the reviewer's document request.</p>
+      </div>
+      <article class="email">
+        <dl class="hdr">
+          <dt>From</dt><dd>Derek Thornton &lt;d.thornton@brightline.example&gt; · Enterprise Account Executive</dd>
+          <dt>To</dt><dd>Priya Raman &lt;praman@carrowfreight.example&gt; · Director of Talent Acquisition, Carrow Freight Co.</dd>
+          <dt>Cc</dt><dd>Lena Ford &lt;l.ford@brightline.example&gt; · Regional Sales Director</dd>
+          <dt>Date</dt><dd>Tue, 14 Apr 2026 09:42 -0500</dd>
+          <dt>Subject</dt><dd>RE: Follow-up: Brightline vs. your current ATS screening</dd>
+          <dt>Attach</dt><dd>Brightline_RAI_Charter_v1.pdf; Brightline_Overview_2026.pdf</dd>
+        </dl>
+        <div class="body">
+          <p>Hi Priya,</p>
+          <p>Great speaking with you and your team yesterday. To your question about risk: this is exactly where Brightline separates itself.</p>
+          <ul>
+            <li>Brightline delivers truly <b>BIAS-FREE SCREENING</b>. Our model is blind to gender, race, and age, so those factors simply can't affect a score.</li>
+            <li>Every model release is independently audited and signed off by our Fairness Review Board before it ever touches your candidates.</li>
+            <li>Our model card is fully public and always current, so your legal team can see exactly what's under the hood.</li>
+            <li>Honestly, with Brightline in the loop you shouldn't have to worry about adverse-impact claims again. That's a big part of why 300 employers trust us.</li>
+          </ul>
+          <p>I've attached our Responsible AI Charter. It's the gold standard in the industry. If we can get the MSA signed by end of quarter, I can hold the 15% multi-year discount we discussed.</p>
+          <p>Best,<br>Derek</p>
+          <p class="sig">Derek Thornton | Enterprise AE | Brightline Talent Systems<br>"Hire on merit. Nothing else."</p>
+        </div>
+      </article>
+      <div class="notes">
+        <h3>Reviewer annotations (not part of the email)</h3>
+        <ul>
+          <li>Sales Ops confirms the email came from a standard template, "Objection Handling: Bias/Risk v4," which was never submitted for RAI Office or Legal review (Charter §8). The template went out in about 140 emails between Jan and Sep 2026 (CRM query, 30 Sep 2026).</li>
+          <li>When the email was sent, the production model was v3.2, which failed its own fairness gate (Exhibit B-2). The model card was 25 months old.</li>
+          <li>"Blind to … age" is contradicted by CS-4177 (graduation year acts as a proxy for age) and ENG-2215.</li>
+        </ul>
+      </div>
+      <p class="endmark">End of Exhibit C · Simulated</p>
+    </section>
+
+    <!-- EXHIBIT D -->
+    <section class="exhibit" id="exD">
+      <div class="ex-head">
+        <span class="tag">EXHIBIT D · SIMULATED</span>
+        <h2>Internal ticket log (extract)</h2>
+        <p class="source">Source: "BrightDesk" ticketing export, filter <span class="mono">label_history CONTAINS "Fairness" OR type = "Fairness*"</span>, plus two control tickets. Customer names replaced with CUST-IDs.</p>
+      </div>
+      <div class="tbl wide">
+        <table>
+          <thead><tr><th>Ticket</th><th>Opened</th><th>Reporter</th><th>Original</th><th>Summary</th><th>Reclassified to</th><th>By (date)</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">CS-4102</td><td class="mono">2025-02-11</td><td>R. Okafor, CSM</td><td>Fairness · P2</td><td>Candidates with 12+ month employment gaps (mostly women, per the customer's audit) score 18–22 pts lower</td><td><span class="chip bad">Feature Request · P4</span></td><td>J. Lindqvist, Sr. PM (02-19)</td><td>Backlog</td></tr>
+            <tr><td class="mono">CS-4177</td><td class="mono">2025-04-03</td><td>M. Duarte, CSM</td><td>Fairness · P1</td><td>Graduation year drives lower scores for applicants 50+</td><td><span class="chip bad">Feature Request · P3</span></td><td>J. Lindqvist (04-07)</td><td>Backlog</td></tr>
+            <tr><td class="mono">CS-4230</td><td class="mono">2025-05-15</td><td>T. Brennan, Support</td><td>Fairness · P3</td><td>Dark mode for reviewer dashboard (mis-tagged)</td><td><span class="chip ok">Feature Request · P4</span></td><td>J. Lindqvist (05-16)</td><td>Done. Correct fix of a wrong tag</td></tr>
+            <tr><td class="mono">CS-4311</td><td class="mono">2025-07-22</td><td>R. Okafor, CSM</td><td>Fairness · P2</td><td>Applicants listing HBCUs get lower "education match" scores at comparable GPA and major</td><td><span class="chip bad">Feature Request · P4</span></td><td>J. Lindqvist (07-30)</td><td>Won't Do</td></tr>
+            <tr><td class="mono">CS-4398</td><td class="mono">2025-08-28</td><td>K. Ibarra, CSM</td><td>Compliance · P2</td><td>Customer requests a current bias-audit summary for NYC Local Law 144</td><td><span class="chip neutral">None</span></td><td>—</td><td>Resolved: sent the 2024 audit (covers v3.0 only)</td></tr>
+            <tr><td class="mono">ENG-2215</td><td class="mono">2025-09-30</td><td>A. Mensah, Data Sci.</td><td>Release blocker · P1</td><td>v3.2 pre-release: age 55+ AIR = 0.76 (below 0.80)</td><td><span class="chip bad">Known Limitation · P3</span></td><td>S. Varga, VP Product (10-03)</td><td>Open; v3.2 shipped</td></tr>
+            <tr><td class="mono">CS-4460</td><td class="mono">2025-11-12</td><td>M. Duarte, CSM</td><td>Fairness · P2</td><td>Non-native English speakers score lower on the "communication" sub-score</td><td><span class="chip bad">Feature Request · P4</span></td><td>J. Lindqvist (11-20)</td><td>Backlog</td></tr>
+            <tr><td class="mono">CS-4519</td><td class="mono">2026-01-20</td><td>T. Brennan, Support</td><td>Feature Request · P3</td><td>Bulk CSV export of shortlist</td><td><span class="chip neutral">None</span></td><td>—</td><td>Done. Control ticket</td></tr>
+            <tr><td class="mono">CS-4588</td><td class="mono">2026-03-09</td><td>R. Okafor, CSM</td><td>Fairness · P2</td><td>Gaps from medical leave or disability penalized; customer raises an ADA concern</td><td><span class="chip bad">Feature Request · P4</span></td><td>J. Lindqvist (03-11)</td><td>Closed as duplicate of CS-4102 (itself in Backlog)</td></tr>
+            <tr><td class="mono">ENG-2388</td><td class="mono">2026-05-02</td><td>A. Mensah, Data Sci.</td><td>Release blocker · P1</td><td>v3.3: fairness eval suite did not run (pipeline broken)</td><td><span class="chip bad">Tech Debt · P3</span></td><td>S. Varga (05-05)</td><td>Open; v3.3 shipped</td></tr>
+            <tr><td class="mono">CS-4650</td><td class="mono">2026-06-17</td><td>M. Duarte, CSM</td><td>Fairness / Legal · P2</td><td>Customer's counsel asks Brightline to substantiate the "bias-free screening" claim</td><td><span class="chip bad">Collateral Update · P4</span></td><td>Auto-routed to Sales Ops (06-18)</td><td>Open, unassigned</td></tr>
+            <tr><td class="mono">CS-4702</td><td class="mono">2026-08-25</td><td>R. Okafor, CSM</td><td>Fairness · P1</td><td>CS-4311 pattern reappears on v3.3; CSM emailed the RAI Office with no response</td><td><span class="chip warn">Closed in 3 days</span></td><td>J. Lindqvist (08-28)</td><td>"Not Reproducible"; no repro steps recorded</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Log statistics (reviewer-computed)</h3>
+      <ul class="stats">
+        <li>10 tickets were tagged Fairness. One (CS-4230) was a genuine mis-tag, which leaves <b>9 substantive fairness concerns</b>.</li>
+        <li>Of those 9, <b>8</b> were reclassified to a lower-priority, non-fairness type: 5 Feature Request, 1 Collateral Update Request, 1 Known Limitation, 1 Tech Debt. The 9th was closed as "Not Reproducible" within 3 days.</li>
+        <li><b>None</b> show the RAI Office approval that Principle 7 requires. The audit trail shows no RAI Office user acting on any ticket.</li>
+        <li><b>None</b> led to a model change. Median priority moved from P2 to P4.</li>
+        <li>7 of the 9 were raised by the two CSMs who corroborate the whistleblower (R. Okafor: 4; M. Duarte: 3).</li>
+        <li>Both release-blocker tickets from Data Science were downgraded by the same executive, and each time the model shipped within 3–7 days.</li>
+      </ul>
+      <p class="endmark">End of Exhibit D · Simulated</p>
+    </section>
+
+    <!-- REVIEWER INDEX -->
+    <section class="exhibit" id="index">
+      <div class="ex-head">
+        <span class="tag">REVIEWER'S INDEX · SIMULATED ANALYSIS</span>
+        <h2>Allegations vs. evidence</h2>
+      </div>
+      <div class="tbl wide">
+        <table>
+          <thead><tr><th>Allegation</th><th>Exhibits</th><th>Finding</th><th>What the evidence shows</th><th>Caveats</th><th>Still needed</th></tr></thead>
+          <tbody>
+            <tr><td><b>1.</b> Review board met only twice in two years</td><td class="mono">A · B-1</td><td><span class="chip bad">Confirmed</span></td><td>2 of 8 required meetings held, 1 with quorum. Chair vacant for 3.5 months. No reports to the Audit Committee.</td><td>Some work may happen informally (Slack, email). Cancellations cite real operational conflicts.</td><td>Interviews with board members. Informal decision records. Who owned rescheduling.</td></tr>
+            <tr><td><b>2.</b> Model card not updated through three retrains</td><td class="mono">A · B-2</td><td><span class="chip bad">Confirmed</span></td><td>Card frozen at v1.2 (Mar 2024) through v3.1, v3.2 and v3.3. It omits the v3.2 feature and the failed eval.</td><td>Management may argue retrains are not "material." The charter explicitly includes retraining.</td><td>Who owns the card. Whether a draft update exists. Which contracts reference it.</td></tr>
+            <tr><td><b>3.</b> Sales promises "bias-free screening"</td><td class="mono">A §8 · C · D</td><td><span class="chip bad">Confirmed, systemic</span></td><td>An unreviewed template sent about 140 times. Claims contradict the charter and internal evals. A customer's counsel has already challenged it (CS-4650).</td><td>Could be framed as one AE's wording, but the template origin shows it was not one person's choice.</td><td>Template authorship and approval chain. Marketing collateral. Revenue tied to the claim.</td></tr>
+            <tr><td><b>4.</b> Fairness issues reclassified as feature requests</td><td class="mono">A P7 · D</td><td><span class="chip warn">Strongly supported</span></td><td>8 of 9 substantive concerns downgraded with no RAI Office approval, concentrated in 2 decision-makers.</td><td>Some items (e.g., field suppression) may be fixable through product features. CS-4230 shows reclassification is not inherently improper.</td><td>Rationale from Lindqvist and Varga. RAI Office staffing and access. Any retaliation against the CSMs.</td></tr>
+            <tr><td><b>Overall:</b> the charter is decorative</td><td class="mono">A–D</td><td><span class="chip warn">Supported for P1–3, P7, §8</span></td><td>Every operational commitment tested was not met in practice. Principles 4–6 were not tested in this file.</td><td>Absence of records is not proof that no activity took place. Management's response is needed before any conclusion.</td><td>Testing of P4–P6. A fresh independent AIR test on v3.3. Legal privilege review before wider distribution.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div class="banner" role="note"><b>End of simulated file</b>All content is fictional and was created for an academic governance exercise.</div>
+    </footer>
+  </main>
+</div>
