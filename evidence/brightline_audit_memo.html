@@ -1,0 +1,301 @@
+<title>Brightline Audit Findings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: audit memo. Memo header block, then numbered finding tables in one column; wide tables scroll inside their own frames. Shares tokens with the Brightline case file. */
+:root {
+  --paper: #f7f8fa;
+  --sheet: #ffffff;
+  --ink: #1b2330;
+  --muted: #5a6474;
+  --rule: #d9dee6;
+  --accent: #2f4a73;
+  --stamp: #9b2d2d;
+  --stamp-bg: #f6e7e5;
+  --warn: #8a5a00;
+  --warn-bg: #fbf0d9;
+  --ok: #2c6a45;
+  --ok-bg: #e3f1e8;
+  --tint: #eef1f5;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161d; --sheet: #191e27; --ink: #e3e7ee; --muted: #9aa4b4; --rule: #2c3440;
+    --accent: #8fb0e0; --stamp: #f0948a; --stamp-bg: #3a1f1e; --warn: #e8c068; --warn-bg: #332a14;
+    --ok: #86cfa2; --ok-bg: #18301f; --tint: #10141a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12161d; --sheet: #191e27; --ink: #e3e7ee; --muted: #9aa4b4; --rule: #2c3440;
+  --accent: #8fb0e0; --stamp: #f0948a; --stamp-bg: #3a1f1e; --warn: #e8c068; --warn-bg: #332a14;
+  --ok: #86cfa2; --ok-bg: #18301f; --tint: #10141a; color-scheme: dark;
+}
+body {
+  background: var(--paper); color: var(--ink);
+  font: 15px/1.55 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+main { max-width: 1180px; margin: 0 auto; display: grid; gap: 44px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+p { margin: 0; max-width: 72ch; }
+h1 { font: 650 clamp(28px, 4vw, 40px)/1.12 var(--f-display); margin: 0; text-wrap: balance; }
+h2 { font: 650 24px/1.2 var(--f-display); margin: 0; text-wrap: balance; }
+h3 { font: 600 15px/1.3 var(--f-body); margin: 0; }
+
+.banner { border: 1.5px solid var(--stamp); background: var(--stamp-bg); color: var(--stamp); padding: 10px 14px; font: 600 13px/1.45 var(--f-body); border-radius: 3px; }
+.banner b { letter-spacing: .12em; text-transform: uppercase; margin-right: 6px; }
+
+.memo { display: grid; gap: 18px; background: var(--sheet); border: 1px solid var(--rule); padding: 24px clamp(16px, 3vw, 32px); }
+.memo .kind { font: 600 12px/1 var(--f-mono); letter-spacing: .2em; color: var(--muted); }
+dl.hdr { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 22px; margin: 0; font-size: 14px; border-block: 1px solid var(--rule); padding-block: 14px; }
+dl.hdr dt { font: 600 11px/1.9 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+dl.hdr dd { margin: 0; }
+
+.bl { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.bl div { background: var(--sheet); padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.bl .k { font: 500 11px/1 var(--f-mono); color: var(--accent); letter-spacing: .06em; }
+.bl strong { font: 650 18px/1.25 var(--f-display); }
+.bl span { font-size: 13px; color: var(--muted); }
+
+nav.toc ol { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+nav.toc a { display: inline-block; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 3px; font-size: 13px; text-decoration: none; color: var(--ink); background: var(--sheet); }
+nav.toc a span { font-family: var(--f-mono); color: var(--accent); margin-right: 6px; }
+nav.toc a:hover { border-color: var(--accent); }
+
+section { display: grid; gap: 14px; scroll-margin-top: 20px; }
+.sec-head { display: grid; gap: 6px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.sec-head .tag { font: 500 12px/1 var(--f-mono); color: var(--accent); letter-spacing: .05em; }
+.note { font-size: 13px; color: var(--muted); max-width: 90ch; }
+
+.tbl { overflow-x: auto; border: 1px solid var(--rule); background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.tbl table { min-width: 1040px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+th { font: 600 11px/1.3 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--paper); }
+tr:last-child td { border-bottom: 0; }
+td.id, .mono { font-family: var(--f-mono); font-size: 12.5px; white-space: nowrap; }
+td.id { color: var(--accent); font-weight: 500; }
+td.ref { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+td q { font-style: italic; }
+tr.sub td { background: var(--tint); font: 600 12px/1.3 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+tr.chosen td { background: var(--ok-bg); }
+
+.chip { display: inline-block; font: 600 11px/1 var(--f-body); letter-spacing: .03em; padding: 4px 7px; border-radius: 3px; white-space: nowrap; }
+.chip.bad { color: var(--stamp); background: var(--stamp-bg); }
+.chip.warn { color: var(--warn); background: var(--warn-bg); }
+.chip.ok { color: var(--ok); background: var(--ok-bg); }
+.chip.neutral { color: var(--muted); background: var(--tint); }
+
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; max-width: 90ch; }
+footer { border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 10px; }
+</style>
+
+<main>
+  <div class="banner" role="note"><b>Simulated</b>Fictional company, people and evidence, prepared for an academic AI-governance exercise. Standard references are paraphrased; check them against the published NIST AI RMF 1.0 and the licensed ISO/IEC 42001:2023 text before relying on them.</div>
+
+  <header class="memo">
+    <span class="kind">MEMORANDUM · AUDIT FINDINGS</span>
+    <h1>Responsible AI Charter: principle-to-practice review</h1>
+    <dl class="hdr">
+      <dt>To</dt><dd>Audit Committee, Brightline Talent Systems (fictional)</dd>
+      <dt>From</dt><dd>Independent Reviewer</dd>
+      <dt>Date</dt><dd>18 Oct 2026</dd>
+      <dt>Re</dt><dd>Whistleblower allegation that the Responsible AI Charter is decorative</dd>
+      <dt>Evidence</dt><dd>Simulated case file, Exhibits A–D (<a href="https://claude.ai/artifact/1kwcx1oKd5yNEnitcudnPn">Brightline Case File</a>). Citations below use its IDs: <span class="mono">Ex. B-2</span>, <span class="mono">CS-4102</span>, etc.</dd>
+      <dt>Criteria</dt><dd>NIST AI RMF 1.0, GOVERN function (GV-1 to GV-6); ISO/IEC 42001:2023 clauses 5–10 and Annex A controls</dd>
+    </dl>
+    <div class="bl" aria-label="Bottom line">
+      <div><span class="k">OVERALL</span><strong>Charter is not operating</strong><span>10 of 12 benchmarked requirements not met; 1 met on paper only; 1 not tested.</span></div>
+      <div><span class="k">ETHICS WASHING</span><strong>6 gaps documented</strong><span>Each tied to an exhibit. The charter itself is used as sales collateral.</span></div>
+      <div><span class="k">CUSTOMER CLAIMS</span><strong>10 deception vectors</strong><span>4 literally false statements, plus omission, proxy-blindness and pressure tactics.</span></div>
+      <div><span class="k">DISCLOSURE</span><strong>Staged, starting now</strong><span>Stop false claims at once; notify all 300 customers of verified facts within 10 business days.</span></div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <ol>
+      <li><a href="#s1"><span>1</span>Standards benchmark</a></li>
+      <li><a href="#s2"><span>2</span>Ethics-washing gaps</a></li>
+      <li><a href="#s3"><span>3</span>Deception vectors</a></li>
+      <li><a href="#s4"><span>4</span>Behavioral symptoms</a></li>
+      <li><a href="#s5"><span>5</span>Accountability</a></li>
+      <li><a href="#s6"><span>6</span>Disclosure timing</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1. BENCHMARK -->
+  <section id="s1">
+    <div class="sec-head">
+      <span class="tag">SECTION 1</span>
+      <h2>Benchmark against NIST AI RMF GOVERN and ISO/IEC 42001</h2>
+      <p class="note">Each row tests one requirement: what the standard asks for, what Brightline's charter promises, and what the records show actually happened.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>ID</th><th>NIST AI RMF</th><th>ISO/IEC 42001</th><th>Requirement (paraphrased)</th><th>Charter design</th><th>Observed practice</th><th>Evidence</th><th>Rating</th></tr></thead>
+        <tbody>
+          <tr><td class="id">B-01</td><td class="ref">GV-1.2</td><td class="ref">5.2 AI policy</td><td>Trustworthy-AI characteristics are written into organizational policy.</td><td>Seven principles with measurable commitments, adopted by the Board.</td><td>The policy exists and is specific. The failures are in operation, not in drafting.</td><td class="ref">Ex. A</td><td><span class="chip neutral">Met on paper</span></td></tr>
+          <tr><td class="id">B-02</td><td class="ref">GV-1.4</td><td class="ref">8.1 Operational control; A.6.2.4 Verification &amp; validation</td><td>Risk controls are set by transparent procedures and actually applied to release decisions.</td><td>Release blocked if AIR is below 0.80 until the board signs off (P1).</td><td>v3.2 failed the gate (AIR 0.76) and shipped after a VP relabeled the blocker. v3.3 shipped with no evaluation at all.</td><td class="ref">Ex. B-2; ENG-2215; ENG-2388</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-03</td><td class="ref">GV-1.5</td><td class="ref">9.3 Management review</td><td>Periodic review is planned at a defined frequency, with defined owners.</td><td>Board meets at least quarterly (P3).</td><td>2 of 8 meetings held; 1 had quorum. One quarter was never scheduled. Chair seat empty for 3.5 months.</td><td class="ref">Ex. B-1</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-04</td><td class="ref">GV-2.1</td><td class="ref">5.3 Roles; A.3.2 AI roles &amp; responsibilities</td><td>Roles, responsibilities and lines of communication for AI risk are documented and clear.</td><td>RAI Office triages fairness reports and approves reclassifications (P7).</td><td>No RAI Office user acted on any of the 9 fairness tickets. Reclassification was done by a product manager and a VP. A CSM's email to the RAI Office got no reply.</td><td class="ref">Ex. D; CS-4702</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-05</td><td class="ref">GV-2.3</td><td class="ref">5.1 Leadership &amp; commitment</td><td>Executive leadership takes responsibility for AI risk decisions.</td><td>Named executive sponsor (CPO); board reports to the Audit Committee twice a year.</td><td>Executives used their authority to override controls rather than own the risk. 0 of 4 semi-annual reports were delivered.</td><td class="ref">Ex. B-1; ENG-2215; ENG-2388</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-06</td><td class="ref">GV-1.1</td><td class="ref">4.1 Context; 6.1 Risk actions; A.5.2 Impact assessment</td><td>Legal and regulatory requirements for the AI system are understood, managed and documented.</td><td>Implied by P1 (four-fifths rule follows the EEOC Uniform Guidelines).</td><td>A customer's NYC Local Law 144 request was answered with an audit more than a year old covering a retired model. An ADA concern was closed as a duplicate. Age (ADEA) disparity shipped.</td><td class="ref">CS-4398; CS-4588; ENG-2215</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-07</td><td class="ref">GV-4.2</td><td class="ref">7.5 Documented information; A.6.2.7 Technical documentation; A.8.2 Information for users</td><td>Teams document risks and impacts and communicate them to those affected.</td><td>Model card updated after every retrain, within 30 days (P2).</td><td>Card frozen at v1.2 (Mar 2024) through three retrains. It omits the v3.2 "communication" feature and the failed evaluation.</td><td class="ref">Ex. B-2</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-08</td><td class="ref">GV-4.3</td><td class="ref">9.1 Monitoring; A.6.2.6 Operation &amp; monitoring</td><td>Practices support testing, incident identification and information sharing.</td><td>Pre-release testing (P1) and quarterly live monitoring (P6).</td><td>Fairness eval pipeline broken after a data migration; the model shipped anyway and the fix stayed open for 4+ months. No live disparity monitoring found.</td><td class="ref">ENG-2388</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-09</td><td class="ref">GV-5.1, GV-5.2</td><td class="ref">A.3.3 Reporting of concerns; 10.2 Nonconformity &amp; corrective action</td><td>Feedback from outside the team is collected, adjudicated and fed back into design.</td><td>Fairness reports triaged in 10 business days; "every concern is a gift" (P7).</td><td>8 of 9 customer and staff fairness reports were downgraded; 0 led to a model change. The 9th was closed in 3 days as "not reproducible" with no test recorded.</td><td class="ref">Ex. D</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-10</td><td class="ref">GV-4.1</td><td class="ref">7.3 Awareness</td><td>Policies foster critical thinking and a safety-first mindset in design and deployment.</td><td>Implied across the charter.</td><td>Both release blockers were resolved in favor of the ship date ("Ship on schedule"; "Ship v3.2; revisit in v3.3").</td><td class="ref">ENG-2215; ENG-2388</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-11</td><td class="ref">GV-1.1, GV-4.2 (external)</td><td class="ref">7.4 Communication; A.8.5 Information for interested parties; A.10.4 Customers</td><td>External communications about the AI system are accurate and controlled.</td><td>Fairness claims reviewed by RAI Office and Legal; never claim to eliminate bias (§8).</td><td>Unreviewed template claiming "bias-free screening" sent about 140 times. A customer's counsel challenge was routed to a collateral backlog.</td><td class="ref">Ex. C; CS-4650</td><td><span class="chip bad">Not met</span></td></tr>
+          <tr><td class="id">B-12</td><td class="ref">GV-3.2</td><td class="ref">A.9 Use of AI systems</td><td>Roles and policies for human oversight of AI decisions are defined.</td><td>Scores are advisory; no auto-rejection without customer opt-in (P4).</td><td>Not examined in this file. Customer auto-reject settings were not sampled.</td><td class="ref">—</td><td><span class="chip neutral">Not tested</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Internal audit (ISO/IEC 42001 clause 9.2) also appears absent: this review was commissioned only after a whistleblower complaint. Principles 5 (Privacy) and 6 (live monitoring) need separate testing.</p>
+  </section>
+
+  <!-- 2. ETHICS WASHING -->
+  <section id="s2">
+    <div class="sec-head">
+      <span class="tag">SECTION 2</span>
+      <h2>Principle-to-practice gaps that amount to ethics washing</h2>
+      <p class="note">A gap counts as ethics washing here when the company keeps getting credit for a commitment, publicly or in sales, while the commitment is not being carried out.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>ID</th><th>Principle as stated</th><th>Practice as observed</th><th>Evidence</th><th>How the company still takes credit</th><th>Severity</th></tr></thead>
+        <tbody>
+          <tr><td class="id">G-01</td><td><b>P1 Fairness.</b> "We test every model for adverse impact before it reaches a single candidate." Failing releases are blocked.</td><td>v3.2 failed (age 55+ AIR 0.76) and shipped 3 days after the blocker was relabeled "Known Limitation." v3.3 was never tested.</td><td class="ref">ENG-2215; ENG-2388; Ex. B-2</td><td>Sales tells prospects "every model release is independently audited."</td><td><span class="chip bad">Critical</span></td></tr>
+          <tr><td class="id">G-02</td><td><b>P2 Transparency.</b> Model card updated with every retrain.</td><td>Card unchanged for 31 months and three retrains.</td><td class="ref">Ex. B-2</td><td>Sales calls the card "fully public and always current."</td><td><span class="chip bad">High</span></td></tr>
+          <tr><td class="id">G-03</td><td><b>P3 Accountability.</b> Quarterly board, semi-annual reports to the Audit Committee.</td><td>2 of 8 meetings, 1 with quorum. 0 of 4 reports.</td><td class="ref">Ex. B-1</td><td>Sales says the board "signs off" every release before it touches candidates.</td><td><span class="chip bad">High</span></td></tr>
+          <tr><td class="id">G-04</td><td><b>P7 Listening.</b> Fairness reports triaged by the RAI Office; reclassified only with its approval.</td><td>8 of 9 reports relabeled as feature requests, tech debt, known limitation or collateral update, with no RAI Office involvement.</td><td class="ref">Ex. D</td><td>The charter's "every concern raised is a gift" stays on the public site.</td><td><span class="chip bad">High</span></td></tr>
+          <tr><td class="id">G-05</td><td><b>§8 Communications.</b> "Brightline does not claim its products eliminate bias."</td><td>Template "Objection Handling: Bias/Risk v4" promises "truly BIAS-FREE SCREENING," sent about 140 times, never reviewed.</td><td class="ref">Ex. C; CS-4650</td><td>The charter's own disclaimer is contradicted in the same email that attaches the charter.</td><td><span class="chip bad">Critical</span></td></tr>
+          <tr><td class="id">G-06</td><td><b>The charter as a whole.</b> "These seven principles guide every model we build and every product we sell."</td><td>The charter is attached to sales emails and called "the gold standard in the industry" to close deals, while its controls do not run.</td><td class="ref">Ex. C; Sections 1 and 2</td><td>The charter itself has become marketing material. This is the core of the allegation.</td><td><span class="chip bad">Critical</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 3. DECEPTION -->
+  <section id="s3">
+    <div class="sec-head">
+      <span class="tag">SECTION 3</span>
+      <h2>Deception and manipulation vectors in customer-facing claims</h2>
+      <p class="note">Deception plants a false belief. Manipulation gets around the customer's own judgment, through pressure, borrowed authority or false reassurance. Source: Exhibit C unless noted.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>ID</th><th>Claim or conduct</th><th>Vector</th><th>Why it misleads</th><th>Contradicting evidence</th><th>Exposure</th></tr></thead>
+        <tbody>
+          <tr class="sub"><td colspan="6">Deception: false beliefs</td></tr>
+          <tr><td class="id">D-01</td><td><q>truly BIAS-FREE SCREENING</q></td><td><span class="chip bad">Literal falsehood</span> · absolute claim</td><td>No screening model can be shown to be bias-free; Brightline's own tests showed measurable bias.</td><td class="ref">ENG-2215; Charter §8</td><td>FTC Act §5 deceptive claims; customer contract claims</td></tr>
+          <tr><td class="id">D-02</td><td><q>blind to gender, race, and age, so those factors simply can't affect a score</q></td><td><span class="chip bad">Misleading truth</span> · fairness through unawareness</td><td>Removing protected fields is likely true. The conclusion is false because proxies carry the same signal: graduation year for age, career gaps for sex and disability, school names for race.</td><td class="ref">CS-4177; CS-4102; CS-4588; CS-4311</td><td>Employers under Title VII, ADEA and ADA</td></tr>
+          <tr><td class="id">D-03</td><td><q>independently audited and signed off by our Fairness Review Board</q></td><td><span class="chip bad">Literal falsehood</span> about process</td><td>No release since 2024 had an independent audit or board sign-off. An internal board is also not "independent."</td><td class="ref">Ex. B-1; Ex. B-2</td><td>Misrepresentation to deployers</td></tr>
+          <tr><td class="id">D-04</td><td><q>model card is fully public and always current</q></td><td><span class="chip bad">Literal falsehood</span></td><td>The card was 25 months old when this email was sent and described a retired model.</td><td class="ref">Ex. B-2</td><td>Customers' own LL144 and audit filings</td></tr>
+          <tr><td class="id">D-05</td><td>Known age disparity and untested v3.3 not disclosed to any customer</td><td><span class="chip bad">Material omission</span></td><td>Deployers carry legal liability and cannot manage a risk they are not told about.</td><td class="ref">ENG-2215; ENG-2388</td><td>Highest: ongoing harm to candidates</td></tr>
+          <tr><td class="id">D-06</td><td>Sending the 2024 audit in reply to a current LL144 request</td><td><span class="chip warn">Substitution</span></td><td>A stale document answers the question as if it were current. It covers v3.0 only.</td><td class="ref">CS-4398</td><td>Customer may post a non-compliant audit</td></tr>
+          <tr class="sub"><td colspan="6">Manipulation: bypassing the customer's judgment</td></tr>
+          <tr><td class="id">D-07</td><td><q>you shouldn't have to worry about adverse-impact claims again</q></td><td><span class="chip warn">False reassurance</span> · implied risk transfer</td><td>Encourages the employer to drop its own monitoring. Legal liability for selection outcomes stays with the employer. This invites automation bias on the customer side.</td><td class="ref">Legal position; ENG-2215</td><td>Employers and candidates</td></tr>
+          <tr><td class="id">D-08</td><td><q>the gold standard in the industry</q> plus the attached charter</td><td><span class="chip warn">Borrowed authority</span> · halo effect</td><td>The charter's credibility substitutes for evidence the customer would otherwise ask for.</td><td class="ref">G-06</td><td>Reputational</td></tr>
+          <tr><td class="id">D-09</td><td><q>300 employers trust us</q></td><td><span class="chip warn">Social proof</span></td><td>Adoption is offered as evidence of fairness. It is not.</td><td class="ref">—</td><td>Low on its own; adds to D-01</td></tr>
+          <tr><td class="id">D-10</td><td><q>If we can get the MSA signed by end of quarter, I can hold the 15% … discount</q></td><td><span class="chip warn">Artificial urgency</span></td><td>A deadline tied to the risk discussion shortens the customer's due-diligence window, which is when legal would check claims D-01 to D-04.</td><td class="ref">Ex. C</td><td>Compounds every other vector</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">The signature line "Hire on merit. Nothing else." repeats the D-02 framing. Because the email is a template (about 140 sends), these vectors are company conduct, not one account executive's.</p>
+  </section>
+
+  <!-- 4. SYMPTOMS -->
+  <section id="s4">
+    <div class="sec-head">
+      <span class="tag">SECTION 4</span>
+      <h2>Behavioral symptoms among Brightline staff</h2>
+      <p class="note">Each diagnosis rests on recorded behavior: ticket comments, labels and decisions. None of it depends on guessing what anyone intended. The "other reading" column records the innocent explanation that interviews must rule out.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>ID</th><th>Phenomenon</th><th>Observable behavior</th><th>Evidence</th><th>Why the behavior fits</th><th>Other reading to rule out</th><th>Control response</th></tr></thead>
+        <tbody>
+          <tr><td class="id">S-01</td><td><b>Ethical fading</b></td><td>Fairness reports are relabeled with neutral business words: "Feature Request," "Roadmap item," "Known Limitation," "Tech Debt," "Collateral Update Request." The labels change who handles the ticket and drop priority from P1/P2 to P3/P4.</td><td class="ref">CS-4102; CS-4177; CS-4311; CS-4460; ENG-2215; ENG-2388; CS-4650</td><td>The ethical content of a decision drops out of view once it is described in operational terms. Seven different tickets were renamed the same way, by different people.</td><td>Honest triage of genuine product gaps. CS-4230 shows some relabeling is correct.</td><td>Fairness label locked; only the RAI Office can remove it. Report label changes monthly to the board.</td></tr>
+          <tr><td class="id">S-02</td><td><b>Motivated reasoning</b></td><td>Conclusions that match the ship date are recorded with no supporting analysis. "Within normal variance for this cohort size" was entered with no confidence interval or test attached. "Not reproducible" was entered with no reproduction steps. A disability report was closed as a duplicate of a ticket that was itself parked in the backlog.</td><td class="ref">ENG-2215; CS-4702; CS-4588</td><td>Each closure uses a standard of proof far lower than the one applied to shipping. Each falls within 3–7 days of a release or within 3 days of an escalation.</td><td>Analysis done but not attached. Ask for the variance calculation and the reproduction attempt.</td><td>A blocker can be overridden only with written analysis and a second sign-off from outside Product.</td></tr>
+          <tr><td class="id">S-03</td><td><b>Automation bias</b></td><td>Model output treated as correct over human evidence. A customer's own audit showing an 18–22 point gap was answered "Model is working as designed." Staff and sales present scores as neutral because protected fields are excluded.</td><td class="ref">CS-4102; CS-4311; Ex. C (D-02, D-07)</td><td>The system's behavior is treated as the standard against which human reports are judged, rather than the reverse.</td><td>A PM with a technical basis for the design. If so, it should be on the ticket.</td><td>Customer-reported disparities trigger a mandatory independent re-test.</td></tr>
+          <tr><td class="id">S-04</td><td><b>Moral deskilling</b></td><td>When the automated fairness eval broke, no one ran a manual check before shipping. When the board lacked quorum, no fallback existed and no one acted. A CSM answered a legal-compliance request by forwarding a canned 2024 PDF.</td><td class="ref">ENG-2388; Ex. B-1 (Q3 2025); CS-4398</td><td>Fairness judgment has been handed to a pipeline and a committee. When either fails, the organization shows no remaining capacity to make the judgment itself.</td><td>Staffing shortfall rather than lost skill. Check headcount and training (GV-2.2).</td><td>Manual eval procedure and a named backup reviewer. A quorum-failure rule that escalates to the Audit Committee.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Counter-evidence that the culture is not uniformly degraded: the data scientist (A. Mensah) and both CSMs raised accurate, timely concerns through official channels. The failure is in what happened after escalation, which points to managers and controls rather than front-line staff.</p>
+  </section>
+
+  <!-- 5. ACCOUNTABILITY -->
+  <section id="s5">
+    <div class="sec-head">
+      <span class="tag">SECTION 5</span>
+      <h2>Accountability allocation</h2>
+      <p class="note">"Knew" means a record shows the party received the information. "Should have known" means the information was within the party's duty to obtain. Shares reflect authority over the outcome, not blame for its own sake.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Party</th><th>Knew (documented)</th><th>Should have known</th><th>Duty breached</th><th>Share</th><th>Required action</th></tr></thead>
+        <tbody>
+          <tr><td><b>Developers</b><br><span class="note">Data science and ML engineering (incl. A. Mensah)</span></td><td>v3.2 failed the age gate; v3.3 eval did not run. Both were escalated as P1 release blockers.</td><td>That graduation year, career gaps and school names act as proxies. That the v3.2 "communication" feature risked penalizing non-native English speakers before it shipped.</td><td>Feature design without proxy testing. No escalation beyond Product when overrides happened. Charter P1 named the board as the next step.</td><td><span class="chip warn">Moderate</span></td><td>Proxy audit of all features. Restore the eval pipeline. Escalation path to the Audit Committee that does not run through Product.</td></tr>
+          <tr><td><b>Employer-customer deployers</b><br><span class="note">300 customers; CUST-017, 042, 063, 071, 104 named</span></td><td>Five customers saw disparities or doubted claims themselves and reported them (CS-4102, 4177, 4311, 4460, 4588, 4650). CUST-071 knew its audit was from 2024.</td><td>As employers, they are responsible for adverse impact in their own selection procedures (Title VII, ADEA; LL144 in NYC). That duty requires their own monitoring and cannot be handed to a vendor.</td><td>Continued reliance on vendor claims, and in some cases continued use after seeing disparities themselves. Mitigated: Brightline's false statements (D-01 to D-07) were made to induce exactly this reliance.</td><td><span class="chip warn">Moderate, mitigated</span></td><td>Run their own AIR analysis on past decisions. Suspend auto-reject. Re-check LL144 postings once notified.</td></tr>
+          <tr><td><b>Brightline managers</b><br><span class="note">S. Varga (VP Product), J. Lindqvist (Sr. PM), L. Ford (Sales Director), CPO as charter sponsor, RAI Office lead</span></td><td><b>Varga:</b> both blockers, which Varga overrode. <b>Lindqvist:</b> six fairness reports, relabeled by Lindqvist. <b>Ford:</b> copied on the email with every false claim. <b>RAI Office:</b> received a direct escalation (CS-4702).</td><td><b>CPO:</b> board not meeting, card stale, no reports filed. <b>Sales leadership:</b> template never reviewed, in breach of §8. <b>RAI Office:</b> no tickets reaching it at all, which signals the routing is broken.</td><td>Overriding controls without authority (P1, P7). Approving or allowing false claims (§8). Sponsor failing to run the program (GV-2.3; ISO 5.1).</td><td><span class="chip bad">Primary</span></td><td>Remove override authority pending review. Withdraw template. Individual accountability reviews, with whistleblower protections confirmed first.</td></tr>
+          <tr><td><b>Board of directors</b><br><span class="note">incl. Audit Committee</span></td><td>Adopted the charter in Sep 2024 with a semi-annual reporting duty to itself.</td><td>That 4 required reports never arrived. That the board chair seat was empty. That the main product is high-risk under employment-discrimination law, and under the EU AI Act for any EU customers.</td><td>Oversight: it set a control and never checked that the control ran (ISO 9.3; GV-1.5). The silence of 4 missed reports was itself the red flag.</td><td><span class="chip bad">Ultimate</span></td><td>Own the disclosure decision (Section 6). Standing RAI agenda item. Commission an independent fairness test of v3.3.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Candidates (job applicants) bear the harm and hold no responsibility. They reach Brightline only through deployers, which is why notice to deployers matters in Section 6.</p>
+  </section>
+
+  <!-- 6. DISCLOSURE -->
+  <section id="s6">
+    <div class="sec-head">
+      <span class="tag">SECTION 6</span>
+      <h2>Disclosure timing: harm reduction vs. the duty of candor</h2>
+      <p class="note">The conflict: a consequentialist case can be made for waiting until the facts are complete and a fix is ready, to avoid panic, inaccuracy and harm to the business. The duty of candor says customers misled by false statements are owed the truth now. Each option below is scored on both.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Option</th><th>What it means</th><th>Harm reduction</th><th>Candor</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td class="id">A · Full and immediate</td><td>Publish every allegation to all customers and the public this week, before testing.</td><td><span class="chip warn">Mixed</span> Stops reliance fast. But unverified items (e.g., the HBCU pattern) could be overstated. Customers may switch to manual screening that is also biased and unmonitored.</td><td><span class="chip ok">Strong</span> Though disclosing claims as fact before they are verified is a candor failure of its own.</td><td><span class="chip neutral">Rejected</span></td></tr>
+          <tr><td class="id">B · Fix, then tell</td><td>Disclose after investigation and remediation, roughly 90 days.</td><td><span class="chip bad">Poor</span> Every screening day under v3.3 risks unlawful rejections of older and other affected applicants. Those people have no voice in the delay. The avoided harms are mostly to Brightline.</td><td><span class="chip bad">Fails</span> False claims D-01 to D-04 keep working on customers for 90 more days. Delay lets the company profit from the deception.</td><td><span class="chip bad">Rejected</span></td></tr>
+          <tr><td class="id">C · Only complainants</td><td>Tell the 5 customers who raised issues; stay silent with the other 295.</td><td><span class="chip bad">Poor</span> The disparity is in the model, so it affects all deployers.</td><td><span class="chip bad">Fails</span> Selective disclosure rewards customers who noticed and leaves the rest misled.</td><td><span class="chip bad">Rejected</span></td></tr>
+          <tr class="chosen"><td class="id">D · Staged, verified facts first</td><td>Stop false claims at once. Within 10 business days, tell all customers the facts proven by documents, with interim safeguards. Disclose further findings as they are verified.</td><td><span class="chip ok">Strong</span> Customers get usable mitigations along with the bad news, which limits panic and protects candidates fastest.</td><td><span class="chip ok">Strong</span> Everything stated is verified. Nothing known is held back. Open items are labeled "reported, under test" rather than hidden.</td><td><span class="chip ok">Recommended</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Why D holds up</th><th>Reasoning</th></tr></thead>
+        <tbody>
+          <tr><td><b>The conflict is narrower than it looks</b></td><td>Harm reduction, measured on candidates rather than the company, also favors speed. The only real harm-reduction case for delay is accuracy. Option D answers it by limiting the first notice to facts the documents already prove: the stale card, the failed v3.2 gate, the untested v3.3 and the false sales claims. None of these needs more investigation.</td></tr>
+          <tr><td><b>Candor sets a floor; consequences set the shape</b></td><td>Stopping false claims and correcting them is not up for negotiation, because the deception is still running. The timing and packaging of everything beyond that floor (safeguards, staging, rollback) is where harm reduction rightly governs.</td></tr>
+          <tr><td><b>Why 10 business days</b></td><td>It matches the charter's own triage standard (P7), so Brightline is held to its own promise. It is long enough for outside counsel to review the notice and for an emergency re-test of v3.3, and short enough that the company cannot keep profiting from the deception for a whole quarter.</td></tr>
+          <tr><td><b>Who decides</b></td><td>The Audit Committee, not management. The managers named in Section 5 have a conflict of interest over timing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Recommended sequence</h3>
+    <ol class="steps">
+      <li><b>Day 0–2:</b> Withdraw the "Bias/Risk v4" template and all "bias-free" collateral. Freeze override authority on release blockers. Confirm protection for the whistleblower and both CSMs.</li>
+      <li><b>Day 0–5:</b> Emergency independent AIR test of v3.3. Decide whether to roll back to v3.1, the last version that passed. Get outside counsel's view on regulatory notice obligations.</li>
+      <li><b>By day 10:</b> Notice to all 300 customers: corrected claims, the v3.2 age finding, v3.3 test status, and interim safeguards (suppress graduation year, human review before rejection, run their own AIR check, re-check LL144 postings).</li>
+      <li><b>Day 10–45:</b> Publish an updated model card. Follow-up notice with verified results on the open items (gap penalty, HBCU, non-native speakers).</li>
+      <li><b>Ongoing:</b> Quarterly board meetings reinstated, with an Audit Committee member attending. Semi-annual reports actually delivered.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p class="note">Limitations: all evidence is simulated. Findings rest on documents only; no interviews were held, and the managers named have not responded. Standard references are paraphrased from NIST AI RMF 1.0 and ISO/IEC 42001:2023 and should be checked against the source text.</p>
+    <div class="banner" role="note"><b>End of simulated memo</b>Fictional content prepared for an academic AI-governance exercise.</div>
+  </footer>
+</main>
